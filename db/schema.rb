@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_26_194138) do
+ActiveRecord::Schema.define(version: 2023_03_27_043308) do
 
   create_table "mask_pharmacies", force: :cascade do |t|
     t.float "price"
@@ -35,6 +35,31 @@ ActiveRecord::Schema.define(version: 2023_03_26_194138) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "purchase_histories", force: :cascade do |t|
+    t.string "pharmacyName"
+    t.string "maskName"
+    t.float "transactionAmount"
+    t.string "transactionDate"
+    t.integer "user_id", null: false
+    t.integer "mask_id", null: false
+    t.integer "pharmacy_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["mask_id"], name: "index_purchase_histories_on_mask_id"
+    t.index ["pharmacy_id"], name: "index_purchase_histories_on_pharmacy_id"
+    t.index ["user_id"], name: "index_purchase_histories_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "name"
+    t.float "cashBalance"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   add_foreign_key "mask_pharmacies", "masks"
   add_foreign_key "mask_pharmacies", "pharmacies"
+  add_foreign_key "purchase_histories", "masks"
+  add_foreign_key "purchase_histories", "pharmacies"
+  add_foreign_key "purchase_histories", "users"
 end

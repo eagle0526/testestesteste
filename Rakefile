@@ -24,23 +24,28 @@ pharmacies_json.each do |pharmacy_data|
   end
 end
 
-# pharmacies_json.each do |pharmacy_data|    
-
-#   pharmacy = Pharmacy.create(
-#     name: pharmacy_data['name'],
-#     cashBalance: pharmacy_data['cashBalance'],
-#     # openingHours: pharmacy_data['openingHours']
-#   )
-
-#   mask = pharmacy_data['masks'].each do |mask|
-#     mask = Mask.create(
-#       name: mask['name'],
-#     #   price: mask['price']      
-#     )
-#     MaskPharmacy.create(mask: mask, pharmacy: pharmacy)
-#   end
-
-# end
-
 end
   
+
+
+
+
+
+desc "create user json file"
+task :create_user_and_purchase_histories => :environment do
+p "讀取json檔案"  
+users_json = JSON.parse(File.read('data/users.json'))
+
+p "新增user"
+users_json.each do |user_data|
+  user = User.create(name: user_data["name"], cashBalance: user_data["cashBalance"])
+    
+  user_data["purchaseHistories"].each do |purchase_data|
+    mask = Mask.find_or_create_by(name: purchase_data["maskName"])
+    pharmacy = Pharmacy.find_or_create_by(name: purchase_data["pharmacyName"])
+    mask_pharmacy = MaskPharmacy.find_or_create_by(mask: mask, pharmacy: pharmacy, price: purchase_data["transactionAmount"])
+    PurchaseHistory.create(pharmacyName: pharmacy.name, maskName: mask.name, user: user, mask: mask, pharmacy: pharmacy, transactionAmount: purchase_data["transactionAmount"], transactionDate: purchase_data["transactionDate"])
+  end
+end
+
+end
