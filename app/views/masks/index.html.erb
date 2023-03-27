@@ -1,0 +1,18 @@
+<h2>首頁</h2>
+
+<table>
+    <tr>
+        <td>mask id</td>
+        <td>mask name</td>        
+    </tr>
+    <% @masks.each do |mask| %>
+    <tr>
+        <td><%= mask.id %></td>
+        <td><%= mask.name %></td>        
+    </tr>
+    <% end %>
+</table>
+
+
+
+  

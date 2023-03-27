@@ -1,0 +1,24 @@
+<h2>口罩、藥局</h2>
+<% if @pharmacy %>
+<h3><%= @pharmacy.name %></h3>
+<% end %>
+
+<table>
+    <tr>
+        <td>pharmacy id</td>        
+        <td>pharmacy name</td>        
+        <td>mask id</td>
+        <td>mask name</td>
+
+        <td>price</td>        
+    </tr>
+    <% @mps.each do |mp| %>
+    <tr>
+        <td><%= mp.pharmacy_id %></td>        
+        <td><%= mp.pharmacy.name %></td>        
+        <td><%= mp.mask_id %></td>
+        <td><%= mp.mask.name %></td>
+        <td><%= mp.price %></td>        
+    </tr>
+    <% end %>
+</table>
