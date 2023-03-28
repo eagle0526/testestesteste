@@ -1,4 +1,7 @@
 class MaskPharmaciesController < ApplicationController
+
+  # before_action :relevance_score, only: [:name_relevance]
+
   def index    
 
     if params[:pharmacy_id]
@@ -47,12 +50,12 @@ class MaskPharmaciesController < ApplicationController
     render json: @result
   end
 
-
+  # 未完成
   def opening    
 
     @pharmacies = Pharmacy.all
     time_format = "%a, %b, %d %H:%M"
-    
+
     def parse_opening_hours(opening_hours_str)
       opening_hours_str = opening_hours_str.gsub(/(\w{3}), /, "") # 刪除逗號和星期幾的縮寫
       times = opening_hours_str.scan(/\d{2}:\d{2}/) # 找出時間字串中的所有時間
@@ -62,14 +65,49 @@ class MaskPharmaciesController < ApplicationController
     # render json: @pharmacies
 
   end
+
+  def name_relevance    
+    pharmacy_name = params[:pharmacy]    
+    mask_name = params[:mask]    
+
+    if pharmacy_name
+      @pharmacies = Pharmacy.where("name LIKE ?", "%#{pharmacy_name}%").sort_by { |pharmacy| -relevance_score(pharmacy, pharmacy_name) }
+      json_data = @pharmacies.map do |pharmacy|
+        {
+          name: pharmacy.name,
+          cash_balance: pharmacy.cashBalance,
+          opening_hours: pharmacy.opening_hours,
+          relevance_score: relevance_score(pharmacy, pharmacy_name)
+        }
+      end
+    else
+      @masks = Mask.where("name LIKE ?", "%#{mask_name}%").sort_by { |mask| -relevance_score(mask, mask_name) }      
+      json_data = @masks.map do |mask|
+        {
+          name: mask.name,                    
+          relevance_score: relevance_score(mask, mask_name)
+        }
+      end
+    end
+
+
+
+    render json: json_data
+  end
+
+  private  
+
+  def relevance_score(term, search_term)
+    name = term.name.downcase
+    search_term = search_term.downcase
+
+    # 計算相關度分數
+    score = 0
+    score += 10 if name.starts_with?(search_term)
+    score += 5 if name.include?(search_term)
+    score += 1 if name.end_with?(search_term)
+    score
+  end
+
 end
 
-
-    # render json: @mps.as_json(except: [:created_at, :updated_at]).map { |mp| mp.merge({ mask_name: mp.mask.name }) }
-
-    # render json: @mps
-    # render json: @mps.map { |mp| mp.attributes.except('created_at', 'updated_at') }, include: :mask
-
-    # render json: @mps, include: :mask
-    
-    # format.json { render :show, status: :ok, location: @user }

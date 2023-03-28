@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     collection do
       get :mask_count
       get :opening
+      get :name_relevance
+      
     end
   end
 
