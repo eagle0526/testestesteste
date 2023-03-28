@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_27_043308) do
+ActiveRecord::Schema.define(version: 2023_03_27_154539) do
 
   create_table "mask_pharmacies", force: :cascade do |t|
     t.float "price"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 2023_03_27_043308) do
     t.float "cashBalance"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "opening_hours"
   end
 
   create_table "purchase_histories", force: :cascade do |t|

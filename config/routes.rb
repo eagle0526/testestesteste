@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :mask_pharmacies do
     collection do
       get :mask_count
+      get :opening
     end
   end
 

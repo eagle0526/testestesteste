@@ -46,6 +46,22 @@ class MaskPharmaciesController < ApplicationController
 
     render json: @result
   end
+
+
+  def opening    
+
+    @pharmacies = Pharmacy.all
+    time_format = "%a, %b, %d %H:%M"
+    
+    def parse_opening_hours(opening_hours_str)
+      opening_hours_str = opening_hours_str.gsub(/(\w{3}), /, "") # 刪除逗號和星期幾的縮寫
+      times = opening_hours_str.scan(/\d{2}:\d{2}/) # 找出時間字串中的所有時間
+      times.map { |time_str| DateTime.strptime(time_str, time_format) } # 將時間字串轉換成時間物件
+    end
+    
+    # render json: @pharmacies
+
+  end
 end
 
 

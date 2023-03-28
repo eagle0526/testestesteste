@@ -17,7 +17,7 @@ p "新增pharmacy"
 
 
 pharmacies_json.each do |pharmacy_data|
-  pharmacy = Pharmacy.create(name: pharmacy_data["name"], cashBalance: pharmacy_data["cashBalance"])
+  pharmacy = Pharmacy.create(name: pharmacy_data["name"], cashBalance: pharmacy_data["cashBalance"], opening_hours: pharmacy_data["openingHours"])
   pharmacy_data["masks"].each do |mask_data|
     mask = Mask.find_or_create_by(name: mask_data["name"])
     MaskPharmacy.create(price: mask_data["price"], mask: mask, pharmacy: pharmacy)
